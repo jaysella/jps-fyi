@@ -1,10 +1,9 @@
 import { useState } from "react";
-// import { useUser } from "@auth0/nextjs-auth0";
+import { useUser, withPageAuthRequired } from "@auth0/nextjs-auth0";
 import Head from "next/head";
 import { Formik, FormikConsumer } from "formik";
 import * as Yup from "yup";
 // import Link from "next/link";
-// import { useFaunaUser } from "../../hooks/useFaunaUser";
 import {
   FormWrapper,
   InputGroup,
@@ -34,7 +33,11 @@ const miniSchema = Yup.object().shape({
 
 const domain = "jps.fyi";
 
-export default function Mini() {
+function Mini() {
+  const { user } = useUser();
+
+  console.log(user);
+
   const [faunaError, setFaunaError] = useState(false);
   const [miniCreated, setMiniCreated] = useState(false);
 
@@ -57,8 +60,7 @@ export default function Mini() {
       .then((r) => {
         if (r.error) {
           console.log("Error:", r.error);
-          setFaunaError(r.message);
-          console.log(r.error, r.message, faunaError);
+          setFaunaError(r.message || r.description || r.error);
         } else {
           console.log(r);
           setMiniCreated(true);
@@ -91,6 +93,7 @@ export default function Mini() {
             <Widget>
               <Formik
                 initialValues={{
+                  destination: "",
                   mini: generateString(5) || "abc",
                 }}
                 validationSchema={miniSchema}
@@ -233,6 +236,8 @@ export default function Mini() {
     </>
   );
 }
+
+export default withPageAuthRequired(Mini);
 
 const PageWrapper = styled.div`
   display: flex;

@@ -1,3 +1,5 @@
+import { withApiAuthRequired } from "@auth0/nextjs-auth0";
+
 var faunadb = require("faunadb"),
   q = faunadb.query;
 
@@ -5,7 +7,7 @@ const guestClient = new faunadb.Client({
   secret: process.env.FAUNA_GUEST_SECRET,
 });
 
-export default async (req, res) => {
+export default withApiAuthRequired(async (req, res) => {
   const { destination, mini } = req.body;
 
   if (!destination || !mini) {
@@ -50,4 +52,4 @@ export default async (req, res) => {
       .status(error.requestResult.statusCode)
       .json({ error: "database_error", message: error.message });
   }
-};
+});
