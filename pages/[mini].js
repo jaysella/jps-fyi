@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
-import redirect from "nextjs-redirect";
 // import { withSimpleLayout } from "../../components/layout/SimpleLayout";
 // import Loader from "../../components/Loader";
 import AlertTriangleIcon from "../components/svg/AlertTriangle";

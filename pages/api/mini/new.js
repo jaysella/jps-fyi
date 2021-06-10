@@ -7,16 +7,27 @@ const guestClient = new faunadb.Client({
   secret: process.env.FAUNA_GUEST_SECRET,
 });
 
-export default withApiAuthRequired(async (req, res) => {
-  const { destination, mini } = req.body;
+function generateString(length) {
+  const string = [...Array(length)]
+    .map((i) => (~~(Math.random() * 36)).toString(36))
+    .join("");
+  return string;
+}
 
-  if (!destination || !mini) {
+export default withApiAuthRequired(async (req, res) => {
+  let { destination, mini } = req.body;
+
+  if (!destination) {
     return res.status(400).json({
       error: {
         name: "missing_params",
         message: "All parameters must be provided",
       },
     });
+  }
+
+  if (!mini) {
+    mini = generateString(5);
   }
 
   try {

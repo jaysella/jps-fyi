@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useUser, withPageAuthRequired } from "@auth0/nextjs-auth0";
+import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 import Head from "next/head";
 import { Formik, FormikConsumer } from "formik";
 import * as Yup from "yup";
@@ -27,17 +27,15 @@ const miniSchema = Yup.object().shape({
     .required("Required"),
   mini: Yup.string()
     .min(2, "Too short! Please enter at least 2 characters")
-    .max(7, "Too long! Please keep to 7 characters")
-    .required("Required"),
+    .max(7, "Too long! Please keep to 7 characters"),
 });
 
 const domain = "jps.fyi";
 
 function Mini() {
-  const { user } = useUser();
-
   const [faunaError, setFaunaError] = useState(false);
   const [miniCreated, setMiniCreated] = useState(false);
+  const [createdMini, setCreatedMini] = useState();
 
   function generateString(length) {
     const string = [...Array(length)]
@@ -62,7 +60,10 @@ function Mini() {
         } else {
           console.log(r);
           setMiniCreated(true);
-          navigator.clipboard.writeText(`https://${domain}/${values.mini}`);
+          setCreatedMini(r.success.miniRequest.data);
+          navigator.clipboard.writeText(
+            `https://${domain}/${r.success.miniRequest.data.mini}`
+          );
         }
       })
       .catch((error) => {
@@ -200,7 +201,7 @@ function Mini() {
                                 type="text"
                                 id="createdMini"
                                 name="createdMini"
-                                value={`${domain}/${formikState.values.mini}`}
+                                value={`${domain}/${createdMini?.mini}`}
                                 readOnly
                                 style={{ textAlign: `center` }}
                               />
