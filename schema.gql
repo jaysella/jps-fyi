@@ -1,0 +1,10 @@
+type Mini {
+  destination: String!
+  mini: String! @unique
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Query {
+  allMinis: [Mini!]
+}
