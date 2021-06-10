@@ -56,7 +56,9 @@ function Mini() {
       .then((r) => {
         if (r.error) {
           console.log("Error:", r.error);
-          setFaunaError(r.message || r.description || r.error);
+          setFaunaError(
+            r.message || r.description || r.error?.message || r.error
+          );
         } else {
           console.log(r);
           setMiniCreated(true);

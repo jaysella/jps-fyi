@@ -28,6 +28,15 @@ export default withApiAuthRequired(async (req, res) => {
 
   if (!mini) {
     mini = generateString(5);
+  } else {
+    if (mini.length < 2 || mini.length > 7) {
+      return res.status(400).json({
+        error: {
+          name: "invalid_length",
+          message: "A mini must be between 2 and 7 characters",
+        },
+      });
+    }
   }
 
   try {

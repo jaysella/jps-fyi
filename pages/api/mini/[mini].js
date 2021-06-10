@@ -10,7 +10,7 @@ export default async (req, res) => {
     query: { mini },
   } = req;
 
-  if (!mini) {
+  if (!mini || mini.length < 2 || mini.length > 7) {
     return res.status(400).json({
       error: {
         name: "missing_params",
