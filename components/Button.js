@@ -9,6 +9,7 @@ export default function Button({
   href,
   fullWidth,
   borderless,
+  iconOnly,
   ...props
 }) {
   return (
@@ -18,6 +19,7 @@ export default function Button({
           <LinkWrapper
             fullWidth={fullWidth || false}
             borderless={borderless || false}
+            iconOnly={iconOnly || false}
             {...props}
           >
             {children}
@@ -27,6 +29,7 @@ export default function Button({
         <ButtonWrapper
           fullWidth={fullWidth || false}
           borderless={borderless || false}
+          iconOnly={iconOnly || false}
           {...props}
         >
           {children}
@@ -59,7 +62,6 @@ export const buttonStyles = css`
   justify-content: center;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.6rem 1rem calc(0.6rem - 1px);
   background: transparent;
   border: var(--base-border-width) solid transparent;
   border-radius: calc(var(--base-border-radius) / 1.5);
@@ -105,6 +107,7 @@ export const ButtonWrapper = styled.button`
   border-color: ${(props) => (props.borderless ? "" : "var(--color-primary)")};
   width: ${(props) => (props.fullWidth ? "100%" : "max-content")};
   background: var(--color-primary);
+  padding: ${(props) => (props.iconOnly ? "0.6rem" : "0.6rem 1rem")};
 `;
 
 export const LinkWrapper = styled.a`
@@ -112,4 +115,5 @@ export const LinkWrapper = styled.a`
   border-color: ${(props) => (props.borderless ? "" : "var(--color-primary)")};
   width: ${(props) => (props.fullWidth ? "100%" : "max-content")};
   background: var(--color-primary);
+  padding: ${(props) => (props.iconOnly ? "0.6rem" : "0.6rem 1rem")};
 `;
