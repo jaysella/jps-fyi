@@ -46,7 +46,7 @@ const PageWrapper = styled.div`
   justify-content: center;
   align-content: center;
   border: 2px solid var(--color-black);
-  border-radius: calc(var(--base-border-radius) * 2);
+  border-radius: var(--base-border-radius);
   margin: 2.5rem;
   height: calc(100vh - (2.5rem * 2));
   overflow: hidden;

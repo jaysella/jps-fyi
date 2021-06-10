@@ -19,6 +19,9 @@ export const globalStyles = (
 
         --base-border-width: 2px;
 
+        --scrollbar-bg: var(--color-white-muted);
+        --scrollbar-thumb: var(--color-primary);
+
         --font-sans-serif: "Bellota Text", -apple-system, BlinkMacSystemFont,
           Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans,
           Helvetica Neue, sans-serif;
@@ -50,6 +53,22 @@ export const globalStyles = (
         overflow-wrap: break-word;
         font-kerning: normal;
         font-feature-settings: "kern", "liga", "clig", "calt";
+      }
+
+      ::-webkit-scrollbar {
+        width: 12px;
+      }
+      body {
+        scrollbar-width: thin;
+        scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg);
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--scrollbar-bg);
+      }
+      ::-webkit-scrollbar-thumb {
+        background-color: var(--scrollbar-thumb);
+        border-radius: var(--base-border-radius);
+        border: 3px solid var(--scrollbar-bg);
       }
 
       * {
