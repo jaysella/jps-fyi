@@ -1,0 +1,9 @@
+[[redirects]]
+  from = "https://media.jps.fyi/*"
+  to = "https://res.cloudinary.com/jaysella/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/m/*"
+  to = "https://res.cloudinary.com/jaysella/:splat"
+  status = 200
