@@ -81,7 +81,8 @@ const InputWrapper = styled(Field)`
   }
 
   ::placeholder {
-    color: var(--color-white-muted);
+    color: var(--color-black-muted);
+    opacity: 0.5;
   }
 
   &:focus {

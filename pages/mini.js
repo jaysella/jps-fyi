@@ -79,7 +79,7 @@ export default function Mini() {
   return (
     <>
       <Head>
-        <title>New Mini</title>
+        <title>New Mini | JPS</title>
       </Head>
 
       <PageWrapper>
@@ -91,7 +91,6 @@ export default function Mini() {
             <Widget>
               <Formik
                 initialValues={{
-                  destination: "https://google.com",
                   mini: generateString(5) || "abc",
                 }}
                 validationSchema={miniSchema}
@@ -123,7 +122,7 @@ export default function Mini() {
                             type="url"
                             id="destination"
                             name="destination"
-                            placeholder="https://pblsh.page/12345"
+                            placeholder="https://google.com"
                             disabled={isSubmitting}
                             invalid={
                               errors.destination && touched.destination

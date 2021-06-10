@@ -111,4 +111,5 @@ export const LinkWrapper = styled.a`
   ${buttonStyles};
   border-color: ${(props) => (props.borderless ? "" : "var(--color-primary)")};
   width: ${(props) => (props.fullWidth ? "100%" : "max-content")};
+  background: var(--color-primary);
 `;
