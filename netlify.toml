@@ -1,11 +1,11 @@
 [[redirects]]
   from = "https://media.jps.fyi"
-  to = "/wall"
+  to = "https://www.jps.fyi/wall"
   status = 200
 
 [[redirects]]
   from = "https://api.jps.fyi"
-  to = "/wall"
+  to = "https://www.jps.fyi/wall"
   status = 200
 
 [[redirects]]
@@ -15,7 +15,7 @@
 
 [[redirects]]
   from = "https://api.jps.fyi/*"
-  to = "/api/:splat"
+  to = "https://www.jps.fyi/api/:splat"
   status = 200
 
 [[redirects]]
