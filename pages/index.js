@@ -72,7 +72,7 @@ const Inner = styled.div`
 `;
 
 const Actions = styled.div`
-  margin-top: 1rem;
+  margin: 1rem auto 0;
   display: flex;
   flex-direction: row;
   gap: 0.75rem;
