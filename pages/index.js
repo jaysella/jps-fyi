@@ -59,7 +59,7 @@ const Main = styled.main`
 `;
 
 const Inner = styled.div`
-  width: max-content;
+  width: 100%;
   margin: 0 auto;
 
   h2 {

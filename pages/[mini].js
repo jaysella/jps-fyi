@@ -16,7 +16,7 @@ function ViewMini() {
   const [miniFetched, setMiniFetched] = useState(false);
   const [miniData, setMiniData] = useState();
 
-  const fetchMini = async () => {
+  async function fetchMini() {
     if (mini) {
       const requestOptions = {
         method: "POST",
@@ -43,7 +43,7 @@ function ViewMini() {
           console.error(error);
         });
     }
-  };
+  }
 
   useEffect(() => {
     fetchMini();

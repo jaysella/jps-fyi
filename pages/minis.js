@@ -2,13 +2,13 @@ import { useState, useEffect } from "react";
 import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 import Head from "next/head";
 import Button, { ButtonIcon } from "../components/Button";
-import ArrowRightCircleIcon from "../components/svg/ArrowRightCircle";
-// import XCircleIcon from "../svg/XCircle";
 import TrashCanIcon from "../components/svg/TrashCan";
+import EditIcon from "../components/svg/Edit";
+import EyeIcon from "../components/svg/Eye";
+import ArrowRightCircleIcon from "../components/svg/ArrowRightCircle";
 import AlertTriangleIcon from "../components/svg/AlertTriangle";
 // import CheckmarkCircle from "../CheckmarkCircle";
 // import Loader from "../Loader";
-// import { css } from "@emotion/react";
 import { timeSinceFromTimestamp } from "../helpers/timeSince";
 import styled from "@emotion/styled";
 
@@ -31,7 +31,6 @@ function Mini() {
             r.message || r.description || r.error?.message || r.error
           );
         } else {
-          console.log(r);
           setMinis(r.success.minis.data);
         }
       })
@@ -60,8 +59,6 @@ function Mini() {
             r.message || r.description || r.error?.message || r.error
           );
         } else {
-          console.log(r);
-
           // Refresh list
           fetchMinis();
         }
@@ -104,7 +101,6 @@ function Mini() {
                   {minis.reverse().map((mini) => (
                     <MiniBlock key={mini.ref["@ref"].id}>
                       <Details>
-                        {/* {console.log(mini.data)} */}
                         <Time>
                           {`${timeSinceFromTimestamp(
                             mini.data.createdAt["@ts"]
@@ -125,13 +121,22 @@ function Mini() {
                           </ButtonIcon>
                         </Button>
                         <Button
+                          aria-label="Edit"
+                          href={`/mini/${mini.data.mini}/edit`}
+                          iconOnly
+                        >
+                          <ButtonIcon>
+                            <EditIcon />
+                          </ButtonIcon>
+                        </Button>
+                        <Button
                           aria-label="Open"
                           href={mini.data.destination}
                           target="_blank"
                           iconOnly
                         >
                           <ButtonIcon>
-                            <ArrowRightCircleIcon />
+                            <EyeIcon />
                           </ButtonIcon>
                         </Button>
                       </Actions>
@@ -179,7 +184,7 @@ const Main = styled.main`
 `;
 
 const Inner = styled.div`
-  width: max-content;
+  width: 100%;
   margin: 0 auto;
 
   h2 {
@@ -192,7 +197,7 @@ const Inner = styled.div`
 `;
 
 const Widget = styled.div`
-  margin-top: 1.5rem;
+  margin: 1.5rem auto 0;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -209,7 +214,7 @@ const MiniBlock = styled.div`
 
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: 1.5rem;
+  gap: 1.25rem;
   width: 100%;
   word-break: break-all;
 `;
@@ -227,16 +232,16 @@ const Time = styled.p`
 const Actions = styled.div`
   margin-top: 1rem;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.5rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.25rem;
 
   button,
   a {
     height: min-content;
 
     svg {
-      height: 18px;
-      width: 18px;
+      height: 16px;
+      width: 16px;
     }
   }
 `;

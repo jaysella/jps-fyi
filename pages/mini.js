@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 import Head from "next/head";
-import { Formik, FormikConsumer } from "formik";
+import { Formik } from "formik";
 import * as Yup from "yup";
-// import Link from "next/link";
 import {
   FormWrapper,
   InputGroup,
@@ -14,11 +13,9 @@ import {
 } from "../components/Form";
 import Button, { ButtonIcon } from "../components/Button";
 import ArrowRightCircleIcon from "../components/svg/ArrowRightCircle";
-// import XCircleIcon from "../svg/XCircle";
 import AlertTriangleIcon from "../components/svg/AlertTriangle";
 // import CheckmarkCircle from "../CheckmarkCircle";
 // import Loader from "../Loader";
-// import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 
 const miniSchema = Yup.object().shape({
@@ -51,7 +48,7 @@ function Mini() {
       body: JSON.stringify(values),
     };
 
-    await fetch("/api/mini/new", requestOptions)
+    await fetch("/api/mini/create", requestOptions)
       .then((response) => response.json())
       .then((r) => {
         if (r.error) {
@@ -60,7 +57,6 @@ function Mini() {
             r.message || r.description || r.error?.message || r.error
           );
         } else {
-          console.log(r);
           setMiniCreated(true);
           setCreatedMini(r.success.miniRequest.data);
           navigator.clipboard.writeText(
@@ -88,8 +84,17 @@ function Mini() {
       <PageWrapper>
         <Main>
           <Inner>
-            <h2>👋</h2>
-            <h1>New Mini</h1>
+            {!miniCreated ? (
+              <>
+                <h2>👋</h2>
+                <h1>New Mini</h1>
+              </>
+            ) : (
+              <>
+                <h2>👍</h2>
+                <h1>Mini Created!</h1>
+              </>
+            )}
 
             <Widget>
               <Formik
@@ -179,37 +184,29 @@ function Mini() {
                       </>
                     ) : (
                       <>
-                        <hr />
-                        <h2>Rockin'!</h2>
-                        <p>Your newest mini is all set.</p>
+                        <p>Rockin'! Your newest mini is all set.</p>
 
-                        <FormikConsumer>
-                          {(formikState) => (
-                            <>
-                              <InputLabel
-                                htmlFor="mini"
-                                style={{
-                                  position: `absolute`,
-                                  left: `-10000px`,
-                                  top: `auto`,
-                                  width: `1px`,
-                                  height: `1px`,
-                                  overflow: `hidden`,
-                                }}
-                              >
-                                Mini
-                              </InputLabel>
-                              <Input
-                                type="text"
-                                id="createdMini"
-                                name="createdMini"
-                                value={`${domain}/${createdMini?.mini}`}
-                                readOnly
-                                style={{ textAlign: `center` }}
-                              />
-                            </>
-                          )}
-                        </FormikConsumer>
+                        <InputLabel
+                          htmlFor="mini"
+                          style={{
+                            position: `absolute`,
+                            left: `-10000px`,
+                            top: `auto`,
+                            width: `1px`,
+                            height: `1px`,
+                            overflow: `hidden`,
+                          }}
+                        >
+                          Mini
+                        </InputLabel>
+                        <Input
+                          type="text"
+                          id="createdMini"
+                          name="createdMini"
+                          value={`${domain}/${createdMini?.mini}`}
+                          readOnly
+                          style={{ textAlign: `center` }}
+                        />
 
                         <ActionGroup>
                           <Button
@@ -259,7 +256,7 @@ const Main = styled.main`
 `;
 
 const Inner = styled.div`
-  width: max-content;
+  width: 100%;
   margin: 0 auto;
 
   h2 {
@@ -272,7 +269,7 @@ const Inner = styled.div`
 `;
 
 const Widget = styled.div`
-  margin-top: 1.5rem;
+  margin: 1.5rem auto 0;
 `;
 
 const Footer = styled.footer`

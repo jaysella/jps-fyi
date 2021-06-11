@@ -8,6 +8,7 @@ const guestClient = new faunadb.Client({
 export default async (req, res) => {
   const {
     query: { mini },
+    body: { destination },
   } = req;
 
   if (!mini) {
@@ -19,9 +20,21 @@ export default async (req, res) => {
     });
   }
 
+  if (!destination) {
+    return res.status(400).json({
+      error: {
+        name: "missing_param",
+        message: "A destination must be provided",
+      },
+    });
+  }
+
   try {
     const miniResult = await guestClient.query(
-      q.Delete(q.Ref(q.Collection("Mini"), mini))
+      q.Update(
+        q.Select(["ref"], q.Get(q.Match(q.Index("mini_by_mini"), mini))),
+        { data: { destination } }
+      )
     );
 
     if (!miniResult) {
