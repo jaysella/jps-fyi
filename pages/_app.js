@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { UserProvider } from "@auth0/nextjs-auth0";
+import { UserProvider } from "@auth0/nextjs-auth0/client";
 import { globalStyles } from "../shared/styles";
 
 function MyApp({ Component, pageProps }) {

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { withPageAuthRequired } from "@auth0/nextjs-auth0";
+import { withPageAuthRequired } from "@auth0/nextjs-auth0/client";
 import Head from "next/head";
 import { Formik } from "formik";
 import * as Yup from "yup";

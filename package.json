@@ -8,7 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
-    "@auth0/nextjs-auth0": "^1.4.0",
+    "@auth0/nextjs-auth0": "^2.2.1",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "faunadb": "^4.7.1",

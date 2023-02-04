@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { withPageAuthRequired } from "@auth0/nextjs-auth0";
+import { withPageAuthRequired } from "@auth0/nextjs-auth0/client";
 import Head from "next/head";
 import Button, { ButtonIcon } from "../components/Button";
 import TrashCanIcon from "../components/svg/TrashCan";
