@@ -17,7 +17,7 @@ export default function Home() {
 
             <Actions>
               <Actions>
-                <Button href="https://jaysella.dev">
+                <Button href="https://jaysella.com">
                   Portfolio
                   <ButtonIcon>
                     <ArrowRightCircleIcon />
