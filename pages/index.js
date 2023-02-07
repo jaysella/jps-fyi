@@ -23,12 +23,12 @@ export default function Home() {
                     <ArrowRightCircleIcon />
                   </ButtonIcon>
                 </Button>
-                <Button href="https://jps.fyi/resume">
+                {/* <Button href="https://jps.fyi/resume">
                   Résumé
                   <ButtonIcon>
                     <ArrowRightCircleIcon />
                   </ButtonIcon>
-                </Button>
+                </Button> */}
               </Actions>
             </Actions>
           </Inner>
