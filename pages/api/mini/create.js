@@ -1,4 +1,4 @@
-import { withApiAuthRequired } from "@auth0/nextjs-auth0/client";
+import { withApiAuthRequired } from "@auth0/nextjs-auth0";
 
 var faunadb = require("faunadb"),
   q = faunadb.query;
