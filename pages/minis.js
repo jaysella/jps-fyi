@@ -16,13 +16,12 @@ function Mini() {
 
   async function fetchMinis() {
     const requestOptions = {
-      method: "POST",
+      method: "GET",
       headers: { "Content-Type": "application/json" },
     };
 
     await fetch("/api/minis", requestOptions)
       .then((response) => response.json())
-      .then((response) => JSON.parse(response))
       .then((r) => {
         if (r.error) {
           console.log("Error:", r.error);
@@ -51,7 +50,6 @@ function Mini() {
 
     await fetch(`/api/mini/${miniRef}/delete`, requestOptions)
       .then((response) => response.json())
-      .then((response) => JSON.parse(response))
       .then((r) => {
         if (r.error) {
           console.log("Error:", r.error);

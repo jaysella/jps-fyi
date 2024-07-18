@@ -16,11 +16,11 @@ function ViewMini() {
   async function fetchMini() {
     if (mini) {
       const requestOptions = {
-        method: "POST",
+        method: "GET",
         headers: { "Content-Type": "application/json" },
       };
 
-      await fetch(`/api/mini/${mini}`, requestOptions)
+      await fetch(`/api/minis/${mini}`, requestOptions)
         .then((response) => response.json())
         .then((r) => {
           if (r.success && r.success.mini) {
