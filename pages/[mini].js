@@ -1,12 +1,9 @@
-import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
-import Head from "next/head";
-// import { withSimpleLayout } from "../../components/layout/SimpleLayout";
-// import Loader from "../../components/Loader";
-import AlertTriangleIcon from "../components/svg/AlertTriangle";
 import styled from "@emotion/styled";
-// import { LoadingWrapper } from "../../shared/styles";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import Redirect from "../components/Redirect";
+import AlertTriangleIcon from "../components/svg/AlertTriangle";
 
 function ViewMini() {
   const router = useRouter();
@@ -82,9 +79,6 @@ function ViewMini() {
             </p>
           </ErrorBlock>
         ) : (
-          // <LoadingWrapper>
-          //   <Loader />
-          // </LoadingWrapper>
           <>
             <h1>Loading...</h1>
           </>

@@ -1,7 +1,5 @@
-import Head from "next/head";
-import Button, { ButtonIcon } from "../components/Button";
-import ArrowRightCircleIcon from "../components/svg/ArrowRightCircle";
 import styled from "@emotion/styled";
+import Head from "next/head";
 
 export default function Home() {
   return (

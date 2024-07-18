@@ -1,22 +1,20 @@
-import { useState } from "react";
 import { withPageAuthRequired } from "@auth0/nextjs-auth0/client";
-import Head from "next/head";
+import styled from "@emotion/styled";
 import { Formik } from "formik";
+import Head from "next/head";
+import { useState } from "react";
 import * as Yup from "yup";
+import Button, { ButtonIcon } from "../components/Button";
 import {
+  ActionGroup,
   FormWrapper,
-  InputGroup,
-  InputLabel,
   Input,
   InputError,
-  ActionGroup,
+  InputGroup,
+  InputLabel,
 } from "../components/Form";
-import Button, { ButtonIcon } from "../components/Button";
-import ArrowRightCircleIcon from "../components/svg/ArrowRightCircle";
 import AlertTriangleIcon from "../components/svg/AlertTriangle";
-// import CheckmarkCircle from "../CheckmarkCircle";
-// import Loader from "../Loader";
-import styled from "@emotion/styled";
+import ArrowRightCircleIcon from "../components/svg/ArrowRightCircle";
 
 const miniSchema = Yup.object().shape({
   destination: Yup.string()
