@@ -2,6 +2,7 @@ import { withPageAuthRequired } from "@auth0/nextjs-auth0/client";
 import styled from "@emotion/styled";
 import { Formik } from "formik";
 import Head from "next/head";
+import Link from "next/link";
 import { useState } from "react";
 import * as Yup from "yup";
 import Button, { ButtonIcon } from "../components/Button";
@@ -20,7 +21,7 @@ const miniSchema = Yup.object().shape({
   destination: Yup.string()
     .url("Please enter a valid URL")
     .required("Required"),
-  mini: Yup.string()
+  slug: Yup.string()
     .min(2, "Too short! Please enter at least 2 characters")
     .max(7, "Too long! Please keep to 7 characters"),
 });
@@ -46,7 +47,7 @@ function Mini() {
       body: JSON.stringify(values),
     };
 
-    await fetch("/api/mini/create", requestOptions)
+    await fetch("/api/minis", requestOptions)
       .then((response) => response.json())
       .then((r) => {
         if (r.error) {
@@ -145,20 +146,20 @@ function Mini() {
                         </InputGroup>
 
                         <InputGroup>
-                          <InputLabel htmlFor="mini">Mini</InputLabel>
+                          <InputLabel htmlFor="slug">Slug</InputLabel>
                           <Input
                             type="text"
-                            id="mini"
-                            name="mini"
+                            id="slug"
+                            name="slug"
                             placeholder="abc89"
                             disabled={isSubmitting}
                             invalid={
-                              errors.mini && touched.mini ? "invalid" : null
+                              errors.slug && touched.slug ? "invalid" : null
                             }
                           />
-                          {errors.mini && touched.mini && (
+                          {errors.slug && touched.slug && (
                             <InputError animated={true}>
-                              {errors.mini}
+                              {errors.slug}
                             </InputError>
                           )}
                         </InputGroup>
@@ -185,7 +186,7 @@ function Mini() {
                         <p>Rockin'! Your newest mini is all set.</p>
 
                         <InputLabel
-                          htmlFor="mini"
+                          htmlFor="slug"
                           style={{
                             position: `absolute`,
                             left: `-10000px`,
@@ -195,13 +196,13 @@ function Mini() {
                             overflow: `hidden`,
                           }}
                         >
-                          Mini
+                          Slug
                         </InputLabel>
                         <Input
                           type="text"
                           id="createdMini"
                           name="createdMini"
-                          value={`${domain}/${createdMini?.mini}`}
+                          value={`${domain}/${createdMini.mini}`}
                           readOnly
                           style={{ textAlign: `center` }}
                         />
@@ -217,6 +218,15 @@ function Mini() {
                               <ArrowRightCircleIcon />
                             </ButtonIcon>
                           </Button>
+
+                          <Link href="/minis">
+                            <Button>
+                              View All
+                              <ButtonIcon>
+                                <ArrowRightCircleIcon />
+                              </ButtonIcon>
+                            </Button>
+                          </Link>
                         </ActionGroup>
                       </>
                     )}
