@@ -1,16 +1,16 @@
-import { useState, useEffect } from "react";
 import { withPageAuthRequired } from "@auth0/nextjs-auth0/client";
 import Head from "next/head";
+import { useEffect, useState } from "react";
 import Button, { ButtonIcon } from "../components/Button";
-import TrashCanIcon from "../components/svg/TrashCan";
+import AlertTriangleIcon from "../components/svg/AlertTriangle";
+import ArrowRightCircleIcon from "../components/svg/ArrowRightCircle";
 import EditIcon from "../components/svg/Edit";
 import EyeIcon from "../components/svg/Eye";
-import ArrowRightCircleIcon from "../components/svg/ArrowRightCircle";
-import AlertTriangleIcon from "../components/svg/AlertTriangle";
+import TrashCanIcon from "../components/svg/TrashCan";
 // import CheckmarkCircle from "../CheckmarkCircle";
 // import Loader from "../Loader";
-import { timeSinceFromTimestamp } from "../helpers/timeSince";
 import styled from "@emotion/styled";
+import { timeSinceFromTimestamp } from "../helpers/timeSince";
 
 function Mini() {
   const [faunaError, setFaunaError] = useState(false);
@@ -24,6 +24,7 @@ function Mini() {
 
     await fetch("/api/minis", requestOptions)
       .then((response) => response.json())
+      .then((response) => JSON.parse(response))
       .then((r) => {
         if (r.error) {
           console.log("Error:", r.error);
@@ -52,6 +53,7 @@ function Mini() {
 
     await fetch(`/api/mini/${miniRef}/delete`, requestOptions)
       .then((response) => response.json())
+      .then((response) => JSON.parse(response))
       .then((r) => {
         if (r.error) {
           console.log("Error:", r.error);

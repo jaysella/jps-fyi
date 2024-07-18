@@ -1,7 +1,7 @@
-import React from "react";
-import Link from "next/link";
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
+import Link from "next/link";
+import React from "react";
 import { linkStyles } from "../shared/styles";
 
 export default function Button({
@@ -15,7 +15,7 @@ export default function Button({
   return (
     <>
       {href && href.length > 0 ? (
-        <Link href={href} passHref>
+        <Link href={href}>
           <LinkWrapper
             fullWidth={fullWidth || false}
             borderless={borderless || false}
@@ -110,7 +110,7 @@ export const ButtonWrapper = styled.button`
   padding: ${(props) => (props.iconOnly ? "0.6rem" : "0.6rem 1rem")};
 `;
 
-export const LinkWrapper = styled.a`
+export const LinkWrapper = styled.div`
   ${buttonStyles};
   border-color: ${(props) => (props.borderless ? "" : "var(--color-primary)")};
   width: ${(props) => (props.fullWidth ? "100%" : "max-content")};

@@ -1,14 +1,14 @@
-import { Fragment } from "react";
+"use client";
+
 import { UserProvider } from "@auth0/nextjs-auth0/client";
+import { Fragment } from "react";
 import { globalStyles } from "../shared/styles";
 
 function MyApp({ Component, pageProps }) {
-  const { user } = pageProps;
-
   const Layout = Component.Layout ? Component.Layout : Fragment;
 
   return (
-    <UserProvider user={user}>
+    <UserProvider>
       {globalStyles}
       <Layout>
         <Component {...pageProps} />
