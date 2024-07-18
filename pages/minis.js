@@ -44,12 +44,13 @@ function Mini() {
 
   async function deleteMini(miniRef) {
     const requestOptions = {
-      method: "POST",
+      method: "DELETE",
       headers: { "Content-Type": "application/json" },
     };
 
-    await fetch(`/api/mini/${miniRef}/delete`, requestOptions)
+    await fetch(`/api/minis/${miniRef}`, requestOptions)
       .then((response) => response.json())
+      .then((r) => console.log(r))
       .then((r) => {
         if (r.error) {
           console.log("Error:", r.error);
