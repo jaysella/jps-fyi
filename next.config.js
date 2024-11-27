@@ -43,7 +43,7 @@ module.exports = {
       },
       {
         source: "/m/:path",
-        destination: "https://res.cloudinary.com/jaysella/:path*",
+        destination: "https://res.cloudinary.com/jaysella/:path",
       },
     ];
   },
