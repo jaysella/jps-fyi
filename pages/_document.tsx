@@ -1,4 +1,4 @@
-import Document, { Html, Head, Main, NextScript } from "next/document";
+import Document, { Head, Html, Main, NextScript } from "next/document";
 
 class MyDocument extends Document {
   static async getInitialProps(ctx) {
@@ -24,7 +24,7 @@ class MyDocument extends Document {
           <meta property="og:description" content="More to come..." />
           <meta
             property="og:image"
-            content="https://media.jaysellla.dev/image/upload/v1621218962/Jay_s_Icon_-_Rounded_-_Color_ke5qiz.png"
+            content="https://media.jps.fyi/image/upload/v1621218962/Jay_s_Icon_-_Rounded_-_Color_ke5qiz.png"
           />
 
           <meta property="twitter:card" content="summary_large_image" />
@@ -33,7 +33,7 @@ class MyDocument extends Document {
           <meta property="twitter:description" content="More to come..." />
           <meta
             property="twitter:image"
-            content="https://media.jaysellla.dev/image/upload/v1621218962/Jay_s_Icon_-_Rounded_-_Color_ke5qiz.png"
+            content="https://media.jps.fyi/image/upload/v1621218962/Jay_s_Icon_-_Rounded_-_Color_ke5qiz.png"
           />
         </Head>
         <body>
