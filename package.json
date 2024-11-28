@@ -10,18 +10,16 @@
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^3.5.0",
-    "@emotion/react": "^11.11.1",
-    "@emotion/styled": "^11.11.0",
-    "@netlify/plugin-nextjs": "^5.5.1",
+    "@emotion/react": "^11.13.5",
+    "@emotion/styled": "^11.13.5",
     "@upstash/redis": "^1.34.3",
-    "@vercel/edge-config": "^1.4.0",
-    "faunadb": "^4.8.0",
-    "formik": "^2.4.2",
-    "next": "^14.2.5",
-    "nextjs-redirect": "^5.2.1",
+    "faunadb": "^4.8.1",
+    "formik": "^2.4.6",
+    "next": "^15.0.3",
+    "nextjs-redirect": "^6.0.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "yup": "^0.32.11"
+    "yup": "^1.4.0"
   },
   "packageManager": "pnpm@9.14.2+sha512.6e2baf77d06b9362294152c851c4f278ede37ab1eba3a55fda317a4a17b209f4dbb973fb250a77abc463a341fcb1f17f17cfa24091c4eb319cda0d9b84278387"
 }
