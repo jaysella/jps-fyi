@@ -6,7 +6,7 @@ const guestClient = new faunadb.Client({
 });
 
 export async function GET(request, { params }) {
-  if (!params.slug || params.slug.length < 2 || params.slug.length > 7) {
+  if (!params.slug) {
     return Response.json(
       {
         error: {
