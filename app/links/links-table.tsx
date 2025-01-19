@@ -12,7 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { timeSinceFromTimestamp } from "@/helpers/timeSince";
+import { timeSinceFromTimestamp } from "@/lib/utils";
 import { ShortenedUrl } from "@/types";
 import { Copy, Edit, ExternalLink, Save, Trash2, X } from "lucide-react";
 import { useState } from "react";
