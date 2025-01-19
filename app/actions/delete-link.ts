@@ -1,5 +1,6 @@
 'use server'
 
+import { createFaunaClient } from "@/lib/fauna"
 import faunadb from "faunadb"
 import { revalidatePath } from "next/cache"
 
@@ -9,9 +10,7 @@ export async function deleteLink(id: string) {
   }
 
   const q = faunadb.query
-  const client = new faunadb.Client({
-    secret: process.env.FAUNA_GUEST_SECRET,
-  })
+  const client = createFaunaClient()
 
   try {
     await client.query(

@@ -1,5 +1,6 @@
 "use server";
 
+import { createFaunaClient } from "@/lib/fauna";
 import { ShortenedUrl } from "@/types";
 import faunadb from "faunadb";
 import { LinksTable } from "./links-table";
@@ -10,9 +11,7 @@ export async function LinksSection() {
   }
 
   const q = faunadb.query;
-  const guestClient = new faunadb.Client({
-    secret: process.env.FAUNA_GUEST_SECRET,
-  });
+  const guestClient = createFaunaClient();
 
   try {
     const minis = await guestClient.query(
