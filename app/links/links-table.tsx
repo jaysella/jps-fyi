@@ -1,5 +1,6 @@
 "use client";
 
+import { deleteLink } from "@/app/actions/delete-link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -12,7 +13,7 @@ import {
 } from "@/components/ui/table";
 import { timeSinceFromTimestamp } from "@/helpers/timeSince";
 import { ShortenedUrl } from "@/types";
-import { Copy, Edit, ExternalLink, Save, X } from "lucide-react";
+import { Copy, Edit, ExternalLink, Save, Trash2, X } from "lucide-react";
 import { useState } from "react";
 
 export function LinksTable({ links }: { links: any[] }) {
@@ -52,6 +53,13 @@ export function LinksTable({ links }: { links: any[] }) {
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
+  };
+
+  const handleDelete = async (id: string) => {
+    const result = await deleteLink(id);
+    if (result.success) {
+      setUrls(urls.filter((url) => url.id !== id));
+    }
   };
 
   return (
@@ -96,9 +104,7 @@ export function LinksTable({ links }: { links: any[] }) {
                 url.originalUrl
               )}
             </TableCell>
-            <TableCell>
-              {`${timeSinceFromTimestamp(url.createdAt)} ago`}
-            </TableCell>
+            <TableCell>{timeSinceFromTimestamp(url.createdAt)}</TableCell>
             <TableCell>{url.clicks}</TableCell>
             <TableCell>
               <div className="flex space-x-2">
@@ -141,6 +147,13 @@ export function LinksTable({ links }: { links: any[] }) {
                       onClick={() => handleEditUrl(url)}
                     >
                       <Edit className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => handleDelete(url.id)}
+                    >
+                      <Trash2 className="h-4 w-4" />
                     </Button>
                   </>
                 )}
