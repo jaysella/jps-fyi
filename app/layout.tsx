@@ -1,5 +1,10 @@
+import "./globals.css";
+
 export const metadata = {
-  title: "JPS",
+  title: {
+    default: "JPS",
+    template: "%s | jps.fyi",
+  },
 };
 
 export default function RootLayout({ children }) {
