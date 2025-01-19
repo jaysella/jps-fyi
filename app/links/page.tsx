@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { LinksTableRefresh } from "./links-table-refresh";
 import { LinksSection } from "./links.server";
+import { NewLinkForm } from "./new-link-form";
 
 export const metadata = {
   title: "Links",
@@ -20,6 +21,7 @@ export default function LinksPage() {
           </div>
         </div>
         <div>
+          <NewLinkForm />
           <Suspense fallback={"Loading..."}>
             <LinksSection />
           </Suspense>

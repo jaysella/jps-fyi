@@ -18,10 +18,10 @@ import { Copy, Edit, ExternalLink, Save, Trash2, X } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-export function LinksTable({ links }: { links: any[] }) {
-  const [urls, setUrls] = useState<ShortenedUrl[]>(links);
+export function LinksTable({ links }: { links: ShortenedUrl[] }) {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editUrl, setEditUrl] = useState<ShortenedUrl | null>(null);
+  const [deletingIds, setDeletingIds] = useState<string[]>([]);
 
   const handleEditUrl = (url: ShortenedUrl) => {
     setEditingId(url.id);
@@ -37,16 +37,6 @@ export function LinksTable({ links }: { links: any[] }) {
       );
 
       if (result.success) {
-        setUrls(
-          urls.map((url) =>
-            url.id === editUrl.id
-              ? {
-                  ...editUrl,
-                  shortUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/${editUrl.slug}`,
-                }
-              : url
-          )
-        );
         setEditingId(null);
         setEditUrl(null);
         toast.success("Link updated successfully");
@@ -68,11 +58,12 @@ export function LinksTable({ links }: { links: any[] }) {
   };
 
   const handleDelete = async (id: string) => {
+    setDeletingIds((prevIds) => [...prevIds, id]);
     const result = await deleteLink(id);
     if (result.success) {
-      setUrls(urls.filter((url) => url.id !== id));
       toast.success("Link deleted");
     }
+    // setDeletingIds((prevIds) => [...prevIds.filter((pId) => pId !== id)]);
   };
 
   return (
@@ -80,15 +71,18 @@ export function LinksTable({ links }: { links: any[] }) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Short URL</TableHead>
+            <TableHead>Slug</TableHead>
             <TableHead>Original URL</TableHead>
             <TableHead>Created</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {urls.map((url) => (
-            <TableRow key={url.id}>
+          {links.map((url) => (
+            <TableRow
+              key={url.id}
+              className={deletingIds.includes(url.id) ? "animate-pulse" : ""}
+            >
               <TableCell className="font-medium">
                 {editingId === url.id ? (
                   <div className="flex items-center space-x-2">
@@ -126,6 +120,7 @@ export function LinksTable({ links }: { links: any[] }) {
                         variant="outline"
                         size="icon"
                         onClick={handleSaveEdit}
+                        disabled={deletingIds.includes(url.id)}
                       >
                         <Save className="h-4 w-4" />
                       </Button>
@@ -133,6 +128,7 @@ export function LinksTable({ links }: { links: any[] }) {
                         variant="outline"
                         size="icon"
                         onClick={handleCancelEdit}
+                        disabled={deletingIds.includes(url.id)}
                       >
                         <X className="h-4 w-4" />
                       </Button>
@@ -143,6 +139,7 @@ export function LinksTable({ links }: { links: any[] }) {
                         variant="outline"
                         size="icon"
                         onClick={() => window.open(url.shortUrl, "_blank")}
+                        disabled={deletingIds.includes(url.id)}
                       >
                         <ExternalLink className="h-4 w-4" />
                       </Button>
@@ -150,6 +147,7 @@ export function LinksTable({ links }: { links: any[] }) {
                         variant="outline"
                         size="icon"
                         onClick={() => copyToClipboard(url.shortUrl)}
+                        disabled={deletingIds.includes(url.id)}
                       >
                         <Copy className="h-4 w-4" />
                       </Button>
@@ -157,6 +155,7 @@ export function LinksTable({ links }: { links: any[] }) {
                         variant="outline"
                         size="icon"
                         onClick={() => handleEditUrl(url)}
+                        disabled={deletingIds.includes(url.id)}
                       >
                         <Edit className="h-4 w-4" />
                       </Button>
@@ -164,6 +163,7 @@ export function LinksTable({ links }: { links: any[] }) {
                         variant="outline"
                         size="icon"
                         onClick={() => handleDelete(url.id)}
+                        disabled={deletingIds.includes(url.id)}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>

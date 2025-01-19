@@ -11,8 +11,7 @@ export function LinksTableRefresh() {
   const handleRefresh = async () => {
     setIsRefreshing(true);
     await refreshLinks();
-    // Fetch the latest data from the server
-    window.location.reload(); // TODO: needed?
+    window.location.reload();
   };
 
   return (
