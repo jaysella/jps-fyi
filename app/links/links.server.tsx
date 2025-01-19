@@ -34,7 +34,6 @@ export async function LinksSection() {
         shortUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/${url.data.mini}`,
         slug: url.data.mini,
         createdAt: url.data.createdAt.toJSON()["@ts"],
-        clicks: 0,
       });
     });
 

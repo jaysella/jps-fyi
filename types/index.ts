@@ -4,5 +4,4 @@ export interface ShortenedUrl {
   shortUrl: string
   slug: string
   createdAt: string
-  clicks: number
 }

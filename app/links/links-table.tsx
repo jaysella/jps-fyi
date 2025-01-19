@@ -83,7 +83,6 @@ export function LinksTable({ links }: { links: any[] }) {
             <TableHead>Short URL</TableHead>
             <TableHead>Original URL</TableHead>
             <TableHead>Created</TableHead>
-            <TableHead>Clicks</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -119,7 +118,6 @@ export function LinksTable({ links }: { links: any[] }) {
                 )}
               </TableCell>
               <TableCell>{timeSinceFromTimestamp(url.createdAt)}</TableCell>
-              <TableCell>{url.clicks}</TableCell>
               <TableCell>
                 <div className="flex space-x-2">
                   {editingId === url.id ? (
