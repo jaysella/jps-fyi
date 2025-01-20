@@ -35,37 +35,40 @@ export function NewLinkForm() {
   };
 
   return (
-    <form
-      onSubmit={handleAddUrl}
-      className="flex flex-row w-full space-x-2 mb-6"
-    >
-      <div className="flex space-x-2 flex-grow">
-        <Input
-          type="url"
-          placeholder="Enter a long URL to shorten"
-          value={newUrl}
-          onChange={(e) => setNewUrl(e.target.value)}
-          className="flex-grow"
-          required
-          disabled={isSubmitting}
-        />
-        <Input
-          type="text"
-          placeholder="Custom slug (optional)"
-          value={newSlug}
-          onChange={(e) => setNewSlug(e.target.value)}
-          className="w-1/3"
-          disabled={isSubmitting}
-        />
-      </div>
-      <Button
-        type="submit"
-        className="w-full sm:w-auto"
-        disabled={isSubmitting}
+    <div className="p-4 bg-stone-50 border">
+      <h2 className="text-lg font-bold tracking-tight mb-1">Create New Link</h2>
+      <form
+        onSubmit={handleAddUrl}
+        className="flex flex-col md:flex-row w-full gap-2"
       >
-        <PlusCircle className="h-4 w-4" />
-        Add URL
-      </Button>
-    </form>
+        <div className="flex flex-col md:flex-row gap-2 flex-grow">
+          <Input
+            type="url"
+            placeholder="Enter a long URL to shorten"
+            value={newUrl}
+            onChange={(e) => setNewUrl(e.target.value)}
+            className="flex-grow"
+            required
+            disabled={isSubmitting}
+          />
+          <Input
+            type="text"
+            placeholder="Custom slug (optional)"
+            value={newSlug}
+            onChange={(e) => setNewSlug(e.target.value)}
+            className="md:w-1/3"
+            disabled={isSubmitting}
+          />
+        </div>
+        <Button
+          type="submit"
+          className="w-full sm:w-auto"
+          disabled={isSubmitting}
+        >
+          <PlusCircle className="h-4 w-4" />
+          Add Link
+        </Button>
+      </form>
+    </div>
   );
 }

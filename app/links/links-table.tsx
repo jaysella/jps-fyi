@@ -68,13 +68,15 @@ export function LinksTable({ links }: { links: ShortenedUrl[] }) {
 
   return (
     <div className="space-y-4">
-      <Table>
+      <Table className="border">
         <TableHeader>
           <TableRow>
             <TableHead>Slug</TableHead>
             <TableHead>Original URL</TableHead>
             <TableHead>Created</TableHead>
-            <TableHead>Actions</TableHead>
+            <TableHead>
+              <span className="sr-only">Actions</span>
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -111,9 +113,11 @@ export function LinksTable({ links }: { links: ShortenedUrl[] }) {
                   url.originalUrl
                 )}
               </TableCell>
-              <TableCell>{timeSinceFromTimestamp(url.createdAt)}</TableCell>
+              <TableCell className="whitespace-nowrap">
+                {timeSinceFromTimestamp(url.createdAt)}
+              </TableCell>
               <TableCell>
-                <div className="flex space-x-2">
+                <div className="flex space-x-2 justify-end">
                   {editingId === url.id ? (
                     <>
                       <Button
