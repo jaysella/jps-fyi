@@ -6,12 +6,6 @@ import { createFaunaClient } from './lib/fauna';
 
 const q = faunadb.query;
 
-// Define paths that don't need shortlink handling
-const publicPaths = new Set([
-  '/',
-  '/links'
-]);
-
 // Handle shortlink redirects
 async function handleShortlink(request: NextRequest) {
   try {
@@ -58,7 +52,6 @@ export async function middleware(request: NextRequest, event: NextFetchEvent) {
 
   // Skip shortlink handling for system paths
   if (
-    publicPaths.has(pathname) ||
     pathname.startsWith('/api/') ||
     pathname.startsWith('/_next/') ||
     pathname.startsWith('/static/')

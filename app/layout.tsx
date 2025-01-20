@@ -1,4 +1,5 @@
 import { Toaster } from "@/components/ui/sonner";
+import { UserProvider } from "@auth0/nextjs-auth0/client";
 import "./globals.css";
 
 export const metadata = {
@@ -12,8 +13,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        {children}
-        <Toaster />
+        <UserProvider>
+          {children}
+          <Toaster />
+        </UserProvider>
       </body>
     </html>
   );
