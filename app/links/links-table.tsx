@@ -12,7 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { timeSinceFromTimestamp } from "@/lib/utils";
+import { copyToClipboard, timeSinceFromTimestamp } from "@/lib/utils";
 import { ShortenedUrl } from "@/types";
 import { Copy, Edit, ExternalLink, Save, Trash2, X } from "lucide-react";
 import { useState } from "react";
@@ -49,12 +49,6 @@ export function LinksTable({ links }: { links: ShortenedUrl[] }) {
   const handleCancelEdit = () => {
     setEditingId(null);
     setEditUrl(null);
-  };
-
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text).then(() => {
-      toast.success("Link copied to clipboard");
-    });
   };
 
   const handleDelete = async (id: string) => {
@@ -150,7 +144,11 @@ export function LinksTable({ links }: { links: ShortenedUrl[] }) {
                       <Button
                         variant="outline"
                         size="icon"
-                        onClick={() => copyToClipboard(url.shortUrl)}
+                        onClick={() =>
+                          copyToClipboard(url.shortUrl).then(() => {
+                            toast.success("Link copied to clipboard");
+                          })
+                        }
                         disabled={deletingIds.includes(url.id)}
                       >
                         <Copy className="h-4 w-4" />

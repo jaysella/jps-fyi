@@ -3,6 +3,7 @@
 import { createLink } from "@/app/actions/create-link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { copyToClipboard } from "@/lib/utils";
 import { PlusCircle } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -18,14 +19,20 @@ export function NewLinkForm() {
       setIsSubmitting(true);
 
       try {
-        const result = await createLink(newUrl, newSlug);
-        if (result.success) {
-          toast.success("Link created successfully");
-          setNewUrl("");
-          setNewSlug("");
-        } else {
-          toast.error("Failed to create link");
-        }
+        toast.promise(createLink(newUrl, newSlug), {
+          loading: "Creating link...",
+          success: async (data) => {
+            setNewUrl("");
+            setNewSlug("");
+            return await copyToClipboard(data.data?.shortUrl ?? "")
+              .then(
+                () =>
+                  `/${data.data?.slug} link created successfully and copied to clipboard`
+              )
+              .catch(() => `/${data.data?.slug} link created successfully`);
+          },
+          error: "Failed to create link",
+        });
       } catch (error) {
         toast.error("An error occurred");
       } finally {

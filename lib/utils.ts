@@ -5,6 +5,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+export function copyToClipboard(text: string): Promise<void> {
+  return navigator.clipboard.writeText(text);
+};
+
 export function timeSince(date: Date | number) {
   const seconds = Math.floor((new Date().getTime() - (date instanceof Date ? date.getTime() : date)) / 1000);
 
