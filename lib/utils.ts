@@ -2,15 +2,19 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
-export function copyToClipboard(text: string): Promise<void> {
-  return navigator.clipboard.writeText(text);
-};
+export function copyToClipboard(text?: string): Promise<void> {
+  if (text) return navigator.clipboard.writeText(text);
+  throw new Error("No value to copy");
+}
 
 export function timeSince(date: Date | number) {
-  const seconds = Math.floor((new Date().getTime() - (date instanceof Date ? date.getTime() : date)) / 1000);
+  const seconds = Math.floor(
+    (new Date().getTime() - (date instanceof Date ? date.getTime() : date)) /
+      1000
+  );
 
   function numberEnding(number: number) {
     return number > 1 ? "s" : "";
@@ -44,6 +48,6 @@ export function timeSince(date: Date | number) {
   return "just now";
 }
 
-export function timeSinceFromTimestamp(timestamp: number | string) {
-  return timeSince(new Date(timestamp).getTime());
+export function timeSinceFromTimestamp(timestamp?: number | string) {
+  return timestamp ? timeSince(new Date(timestamp).getTime()) : "Unknown";
 }

@@ -1,5 +1,7 @@
 "use client";
 
+import { deleteLink } from "@/app/actions/delete-link-legacy";
+import { updateLink } from "@/app/actions/update-link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -11,56 +13,51 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { copyToClipboard, timeSinceFromTimestamp } from "@/lib/utils";
-import { ShortlinkData } from "@/types";
+import { ShortenedUrl } from "@/types";
 import { Copy, Edit, ExternalLink, Save, Trash2, X } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { deleteShortlink } from "../actions/delete-link";
 
-export function LinksTable({ links: shortlinks }: { links: ShortlinkData[] }) {
-  const [editingKey, setEditingId] = useState<string | null>(null);
-  const [editUrl, setEditUrl] = useState<ShortlinkData | null>(null);
-  const [deletingKeys, setDeletingKeys] = useState<string[]>([]);
+export function LinksTable({ links }: { links: ShortenedUrl[] }) {
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editUrl, setEditUrl] = useState<ShortenedUrl | null>(null);
+  const [deletingIds, setDeletingIds] = useState<string[]>([]);
 
-  const handleEditUrl = (url: ShortlinkData) => {
-    setEditingId(url.key);
+  const handleEditUrl = (url: ShortenedUrl) => {
+    setEditingId(url.id);
     setEditUrl({ ...url });
   };
 
   const handleSaveEdit = async () => {
-    alert("Not implemented");
-    // if (editUrl) {
-    //   const result = await updateLink(
-    //     editUrl.key,
-    //     editUrl.key,
-    //     editUrl.destinationUrl
-    //   );
+    if (editUrl) {
+      const result = await updateLink(
+        editUrl.id,
+        editUrl.slug,
+        editUrl.originalUrl
+      );
 
-    //   if (result.success) {
-    //     setEditingId(null);
-    //     setEditUrl(null);
-    //     toast.success("Link updated successfully");
-    //   } else {
-    //     toast.error("Failed to update link");
-    //   }
-    // }
+      if (result.success) {
+        setEditingId(null);
+        setEditUrl(null);
+        toast.success("Link updated successfully");
+      } else {
+        toast.error("Failed to update link");
+      }
+    }
   };
 
   const handleCancelEdit = () => {
-    alert("Not implemented");
-    // setEditingId(null);
-    // setEditUrl(null);
+    setEditingId(null);
+    setEditUrl(null);
   };
 
-  const handleDelete = async (key: string) => {
-    setDeletingKeys((prevKeys) => [...prevKeys, key]);
-    const result = await deleteShortlink(key);
+  const handleDelete = async (id: string) => {
+    setDeletingIds((prevIds) => [...prevIds, id]);
+    const result = await deleteLink(id);
     if (result.success) {
       toast.success("Link deleted");
-    } else {
-      toast.error("Link not deleted: " + result.error);
     }
-    setDeletingKeys((prevKeys) => prevKeys.filter((pKey) => pKey !== key));
+    // setDeletingIds((prevIds) => [...prevIds.filter((pId) => pId !== id)]);
   };
 
   return (
@@ -69,7 +66,7 @@ export function LinksTable({ links: shortlinks }: { links: ShortlinkData[] }) {
         <TableHeader>
           <TableRow>
             <TableHead>Slug</TableHead>
-            <TableHead>Destination URL</TableHead>
+            <TableHead>Original URL</TableHead>
             <TableHead>Created</TableHead>
             <TableHead>
               <span className="sr-only">Actions</span>
@@ -77,56 +74,51 @@ export function LinksTable({ links: shortlinks }: { links: ShortlinkData[] }) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {shortlinks.map((shortlink) => (
+          {links.map((url) => (
             <TableRow
-              key={shortlink.key}
-              className={
-                deletingKeys.includes(shortlink.key) ? "animate-pulse" : ""
-              }
+              key={url.id}
+              className={deletingIds.includes(url.id) ? "animate-pulse" : ""}
             >
               <TableCell className="font-medium">
-                {editingKey === shortlink.key ? (
+                {editingId === url.id ? (
                   <div className="flex items-center space-x-2">
                     <span>{process.env.NEXT_PUBLIC_BASE_URL}</span>
                     <Input
-                      value={editUrl?.key}
+                      value={editUrl?.slug}
                       onChange={(e) =>
-                        setEditUrl({ ...editUrl!, key: e.target.value })
+                        setEditUrl({ ...editUrl!, slug: e.target.value })
                       }
                       className="w-24"
                     />
                   </div>
                 ) : (
-                  `/${shortlink.key}`
+                  `/${url.slug}`
                 )}
               </TableCell>
               <TableCell>
-                {editingKey === shortlink.key ? (
+                {editingId === url.id ? (
                   <Input
-                    value={editUrl?.destinationUrl}
+                    value={editUrl?.originalUrl}
                     onChange={(e) =>
-                      setEditUrl({
-                        ...editUrl!,
-                        destinationUrl: e.target.value,
-                      })
+                      setEditUrl({ ...editUrl!, originalUrl: e.target.value })
                     }
                   />
                 ) : (
-                  shortlink.destinationUrl
+                  url.originalUrl
                 )}
               </TableCell>
               <TableCell className="whitespace-nowrap">
-                {timeSinceFromTimestamp(shortlink.createdAt)}
+                {timeSinceFromTimestamp(url.createdAt)}
               </TableCell>
               <TableCell>
                 <div className="flex space-x-2 justify-end">
-                  {editingKey === shortlink.key ? (
+                  {editingId === url.id ? (
                     <>
                       <Button
                         variant="outline"
                         size="icon"
                         onClick={handleSaveEdit}
-                        disabled={deletingKeys.includes(shortlink.key)}
+                        disabled={deletingIds.includes(url.id)}
                       >
                         <Save className="h-4 w-4" />
                       </Button>
@@ -134,7 +126,7 @@ export function LinksTable({ links: shortlinks }: { links: ShortlinkData[] }) {
                         variant="outline"
                         size="icon"
                         onClick={handleCancelEdit}
-                        disabled={deletingKeys.includes(shortlink.key)}
+                        disabled={deletingIds.includes(url.id)}
                       >
                         <X className="h-4 w-4" />
                       </Button>
@@ -144,8 +136,8 @@ export function LinksTable({ links: shortlinks }: { links: ShortlinkData[] }) {
                       <Button
                         variant="outline"
                         size="icon"
-                        onClick={() => window.open(shortlink.url, "_blank")}
-                        disabled={deletingKeys.includes(shortlink.key)}
+                        onClick={() => window.open(url.shortUrl, "_blank")}
+                        disabled={deletingIds.includes(url.id)}
                       >
                         <ExternalLink className="h-4 w-4" />
                       </Button>
@@ -153,27 +145,27 @@ export function LinksTable({ links: shortlinks }: { links: ShortlinkData[] }) {
                         variant="outline"
                         size="icon"
                         onClick={() =>
-                          copyToClipboard(shortlink.url).then(() => {
+                          copyToClipboard(url.shortUrl).then(() => {
                             toast.success("Link copied to clipboard");
                           })
                         }
-                        disabled={deletingKeys.includes(shortlink.key)}
+                        disabled={deletingIds.includes(url.id)}
                       >
                         <Copy className="h-4 w-4" />
                       </Button>
                       <Button
                         variant="outline"
                         size="icon"
-                        onClick={() => handleEditUrl(shortlink)}
-                        disabled={deletingKeys.includes(shortlink.key)}
+                        onClick={() => handleEditUrl(url)}
+                        disabled={deletingIds.includes(url.id)}
                       >
                         <Edit className="h-4 w-4" />
                       </Button>
                       <Button
                         variant="outline"
                         size="icon"
-                        onClick={() => handleDelete(shortlink.key)}
-                        disabled={deletingKeys.includes(shortlink.key)}
+                        onClick={() => handleDelete(url.id)}
+                        disabled={deletingIds.includes(url.id)}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>

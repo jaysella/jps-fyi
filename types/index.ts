@@ -1,7 +1,8 @@
-export interface ShortenedUrl {
-  id: string
-  originalUrl: string
-  shortUrl: string
-  slug: string
-  createdAt: string
-}
+export type ShortlinkData = {
+  key: string;
+  url?: string;
+  destinationUrl?: string;
+  visits?: number;
+  createdAt?: string;
+  ttl: number; // TTL in seconds, -1 means no expiration
+};

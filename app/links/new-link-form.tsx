@@ -15,6 +15,7 @@ export function NewLinkForm() {
 
   const handleAddUrl = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (newUrl) {
       setIsSubmitting(true);
 
@@ -24,12 +25,12 @@ export function NewLinkForm() {
           success: async (data) => {
             setNewUrl("");
             setNewSlug("");
-            return await copyToClipboard(data.data?.shortUrl ?? "")
+            return await copyToClipboard(data.data?.key)
               .then(
                 () =>
-                  `/${data.data?.slug} link created successfully and copied to clipboard`
+                  `/${data.data?.key} shortlink created successfully and copied to clipboard`
               )
-              .catch(() => `/${data.data?.slug} link created successfully`);
+              .catch(() => `/${data.data?.key} shortlink created successfully`);
           },
           error: "Failed to create link",
         });

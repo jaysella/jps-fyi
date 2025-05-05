@@ -1,28 +1,23 @@
-'use server'
+"use server";
 
-import { createFaunaClient } from "@/lib/fauna"
-import faunadb from "faunadb"
-import { revalidatePath } from "next/cache"
+import { Redis } from "@upstash/redis";
+import { revalidatePath } from "next/cache";
 
-export async function deleteLink(id: string) {
-  if (!process.env.FAUNA_GUEST_SECRET) {
-    return { success: false, error: 'Missing database credentials' }
-  }
+const redis = Redis.fromEnv();
 
-  const q = faunadb.query
-  const client = createFaunaClient()
-
+export async function deleteShortlink(key: string) {
   try {
-    await client.query(
-      q.Delete(
-        q.Ref(q.Collection('Mini'), id)
-      )
-    )
+    const result = await redis.del(key);
 
-    revalidatePath('/links')
-    return { success: true }
+    if (result === 1) {
+      revalidatePath("/links");
+      return { success: true };
+    }
+
+    console.error("Failed to delete shortlink");
+    return { success: false, error: "Failed to delete shortlink" };
   } catch (error) {
-    console.error('Failed to delete URL:', error)
-    return { success: false, error: 'Failed to delete URL' }
+    console.error("Failed to delete shortlink:", error);
+    return { success: false, error: "Failed to delete shortlink" };
   }
 }
