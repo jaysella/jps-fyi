@@ -62,7 +62,7 @@ export function timeSinceFromTimestamp(timestamp?: number | string) {
  * @returns human-friendly TTL string
  */
 export function formatTTL(ttlSeconds: number): string {
-  if (ttlSeconds <= -1) return 'No expiration';
+  if (ttlSeconds <= -1) return 'Never';
   if (ttlSeconds === 0) return 'Expired';
 
   const days = Math.floor(ttlSeconds / 86400);

@@ -9,10 +9,14 @@ async function handleShortlink(request: NextRequest) {
   try {
     const slug = request.nextUrl.pathname.slice(1);
 
+    // get destination URL data, if the slug is a valid shortlink
     const result: string | null = await redis.hget(slug, "destinationUrl");
     console.log("🚀 ~ handleShortlink ~ result:", result);
 
     if (!result) throw new Error("Key not found or destinationUrl not set");
+
+    // increment visit counter
+    await redis.hincrby(slug, "visits", 1);
 
     return NextResponse.redirect(new URL(result), {
       status: 302,
