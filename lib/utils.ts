@@ -51,3 +51,30 @@ export function timeSince(date: Date | number) {
 export function timeSinceFromTimestamp(timestamp?: number | string) {
   return timestamp ? timeSince(new Date(timestamp).getTime()) : "Unknown";
 }
+
+/**
+ * Converts a TTL expiration in seconds to a human-friendly string.
+ * Returns "No expiration" if TTL is -1 or less.
+ * Returns "Expired" if TTL is 0.
+ * Otherwise returns a string like "5m 30s", "2h 15m", or "3d 4h".
+ *
+ * @param ttlSeconds time until expiration, in seconds
+ * @returns human-friendly TTL string
+ */
+export function formatTTL(ttlSeconds: number): string {
+  if (ttlSeconds <= -1) return 'No expiration';
+  if (ttlSeconds === 0) return 'Expired';
+
+  const days = Math.floor(ttlSeconds / 86400);
+  const hours = Math.floor((ttlSeconds % 86400) / 3600);
+  const minutes = Math.floor((ttlSeconds % 3600) / 60);
+  const seconds = ttlSeconds % 60;
+
+  const parts: string[] = [];
+  if (days) parts.push(`${days}d`);
+  if (hours) parts.push(`${hours}h`);
+  if (minutes) parts.push(`${minutes}m`);
+  if (seconds) parts.push(`${seconds}s`);
+
+  return parts.join(' ');
+}

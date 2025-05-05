@@ -10,7 +10,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { copyToClipboard, timeSinceFromTimestamp } from "@/lib/utils";
+import {
+  copyToClipboard,
+  formatTTL,
+  timeSinceFromTimestamp,
+} from "@/lib/utils";
 import { ShortlinkData } from "@/types";
 import { Copy, Edit, ExternalLink, Save, Trash2, X } from "lucide-react";
 import { useState } from "react";
@@ -70,6 +74,7 @@ export function LinksTable({ links: shortlinks }: { links: ShortlinkData[] }) {
           <TableRow>
             <TableHead>Slug</TableHead>
             <TableHead>Destination URL</TableHead>
+            <TableHead>TTL</TableHead>
             <TableHead>Created</TableHead>
             <TableHead>
               <span className="sr-only">Actions</span>
@@ -114,6 +119,9 @@ export function LinksTable({ links: shortlinks }: { links: ShortlinkData[] }) {
                 ) : (
                   shortlink.destinationUrl
                 )}
+              </TableCell>
+              <TableCell className="whitespace-nowrap">
+                {formatTTL(shortlink.ttl)}
               </TableCell>
               <TableCell className="whitespace-nowrap">
                 {timeSinceFromTimestamp(shortlink.createdAt)}

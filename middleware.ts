@@ -1,35 +1,24 @@
-import { withMiddlewareAuthRequired } from '@auth0/nextjs-auth0/edge';
-import faunadb from "faunadb";
+import { withMiddlewareAuthRequired } from "@auth0/nextjs-auth0/edge";
+import { Redis } from "@upstash/redis";
 import type { NextFetchEvent, NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { createFaunaClient } from './lib/fauna';
 
-const q = faunadb.query;
+const redis = Redis.fromEnv();
 
-// Handle shortlink redirects
 async function handleShortlink(request: NextRequest) {
   try {
-    const client = createFaunaClient()
     const slug = request.nextUrl.pathname.slice(1);
 
-    const result = await client.query<{
-      data: { destination: string };
-    }>(
-      q.Let(
-        {
-          match: q.Match(q.Index("mini_by_mini"), slug),
-        },
-        q.If(
-          q.Exists(q.Var("match")),
-          q.Get(q.Var("match")),
-          q.Abort("Mini not found")
-        )
-      )
-    );
+    const result: string | null = await redis.hget(slug, "destinationUrl");
+    console.log("🚀 ~ handleShortlink ~ result:", result);
 
-    return NextResponse.redirect(new URL(result.data.destination), { status: 302 });
+    if (!result) throw new Error("Key not found or destinationUrl not set");
+
+    return NextResponse.redirect(new URL(result), {
+      status: 302,
+    });
   } catch (error) {
-    console.error("Error fetching mini:", error);
+    console.error("Error fetching shortlink:", error?.message);
     return NextResponse.next();
   }
 }
@@ -46,15 +35,15 @@ export async function middleware(request: NextRequest, event: NextFetchEvent) {
   const { pathname } = request.nextUrl;
 
   // Handle protected routes first
-  if (pathname.startsWith('/links')) {
+  if (pathname.startsWith("/links")) {
     return protectedMiddleware(request, event);
   }
 
   // Skip shortlink handling for system paths
   if (
-    pathname.startsWith('/api/') ||
-    pathname.startsWith('/_next/') ||
-    pathname.startsWith('/static/')
+    pathname.startsWith("/api/") ||
+    pathname.startsWith("/_next/") ||
+    pathname.startsWith("/static/")
   ) {
     return NextResponse.next();
   }
@@ -67,6 +56,6 @@ export async function middleware(request: NextRequest, event: NextFetchEvent) {
 export const config = {
   matcher: [
     // Match paths except static files
-    '/((?!_next/static|_next/image|favicon.ico).*)',
+    "/((?!_next/static|_next/image|favicon.ico).*)",
   ],
 };

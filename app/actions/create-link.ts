@@ -9,12 +9,9 @@ const redis = Redis.fromEnv();
 /**
  * Creates a new shortlink and returns the result.
  *
- * This server action generates a new shortlink and returns an object
- * indicating success along with the newly created shortlink data.
- *
  * @param destination the URL to shorten
  * @param customSlug the desired slug
- * @param expiration the expire time, in seconds (default = 3600)
+ * @param expiration the expire time, in seconds (default = 3600). Pass `-1` to prevent expiration.
  * @returns {Promise<{ success: true; data: string }>} an object containing
  *          a success flag and the newly created shortlink data.
  */
@@ -34,7 +31,11 @@ export async function createLink(
         createdAt: new Date().toISOString(),
         visits: 0,
       });
-      p.expire(slug, expiration);
+
+      if (expiration !== -1) {
+        p.expire(slug, expiration);
+      }
+
       await p.exec();
 
       const newShortlink: ShortlinkData = {
