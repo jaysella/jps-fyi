@@ -3,6 +3,13 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Table,
   TableBody,
   TableCell,
@@ -17,7 +24,7 @@ import {
 } from "@/lib/utils";
 import { ShortlinkData } from "@/types";
 import { Copy, Edit, ExternalLink, Save, Trash2, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { deleteShortlink } from "../actions/delete-link";
 import { updateShortlink } from "../actions/update-link";
@@ -28,6 +35,7 @@ export function LinksTable({ links: shortlinks }: { links: ShortlinkData[] }) {
     key: string;
     newKey?: string;
     newDestinationUrl?: string;
+    newTTL?: string;
   } | null>(null);
   const [deletingKeys, setDeletingKeys] = useState<string[]>([]);
 
@@ -41,6 +49,9 @@ export function LinksTable({ links: shortlinks }: { links: ShortlinkData[] }) {
       const result = await updateShortlink(shortlinkEdits.key, {
         newKey: shortlinkEdits.newKey,
         newDestinationUrl: shortlinkEdits.newDestinationUrl,
+        newTTL: shortlinkEdits.newTTL
+          ? parseInt(shortlinkEdits.newTTL)
+          : undefined,
       });
 
       if (result.success) {
@@ -69,24 +80,14 @@ export function LinksTable({ links: shortlinks }: { links: ShortlinkData[] }) {
     setDeletingKeys((prevKeys) => prevKeys.filter((pKey) => pKey !== key));
   };
 
-  useEffect(() => {
-    const listener = (event) => {
-      if (editingKey) {
-        if (event.code === "Enter" || event.code === "NumpadEnter") {
-          event.preventDefault();
-          handleSaveEdit();
-        }
-      }
-    };
-    document.addEventListener("keydown", listener);
-    return () => {
-      document.removeEventListener("keydown", listener);
-    };
-  }, []);
-
   return (
     <div className="space-y-4">
-      <form onSubmit={handleSaveEdit}>
+      <form
+        onSubmit={(ev: React.SyntheticEvent<HTMLFormElement>) => {
+          ev.preventDefault();
+          handleSaveEdit();
+        }}
+      >
         <Table className="border">
           <TableHeader>
             <TableRow>
@@ -146,7 +147,41 @@ export function LinksTable({ links: shortlinks }: { links: ShortlinkData[] }) {
                   )}
                 </TableCell>
                 <TableCell className="whitespace-nowrap">
-                  {formatTTL(shortlink.ttl)}
+                  {editingKey === shortlink.key ? (
+                    <Select
+                      onValueChange={(e) =>
+                        setShortlinkEdits({
+                          key: shortlink.key,
+                          newTTL: e,
+                        })
+                      }
+                      defaultValue={String(shortlink.ttl)}
+                    >
+                      <SelectTrigger className="w-48">
+                        <SelectValue placeholder="Select a TTL" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {shortlink.ttl !== -1 && (
+                          <SelectItem value={String(shortlink.ttl)}>
+                            Current ({formatTTL(shortlink.ttl)})
+                          </SelectItem>
+                        )}
+                        <SelectItem value="-1">Never</SelectItem>
+                        <SelectItem value={String(60 * 60)}>1 hour</SelectItem>
+                        <SelectItem value={String(60 * 60 * 24)}>
+                          1 day
+                        </SelectItem>
+                        <SelectItem value={String(60 * 60 * 24 * 7)}>
+                          1 week
+                        </SelectItem>
+                        <SelectItem value={String(60 * 60 * 24 * 7 * 31)}>
+                          1 month
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    formatTTL(shortlink.ttl)
+                  )}
                 </TableCell>
                 <TableCell className="whitespace-nowrap">
                   {shortlink.visits}

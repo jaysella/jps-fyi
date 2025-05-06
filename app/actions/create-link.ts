@@ -11,14 +11,14 @@ const redis = Redis.fromEnv();
  *
  * @param destination the URL to shorten
  * @param customSlug the desired slug
- * @param expiration the expire time, in seconds (default = 3600). Pass `-1` to prevent expiration.
+ * @param ttl the expire time, in seconds. Defaults to 3600 (one hour). Pass `-1` to prevent expiration.
  * @returns {Promise<{ success: true; data: string }>} an object containing
  *          a success flag and the newly created shortlink data.
  */
 export async function createLink(
   destinationUrl: string,
   customSlug?: string,
-  expiration: number = 3600 // one hour
+  ttl: number = 60 * 60 // one hour
 ) {
   try {
     const slug = customSlug || Math.random().toString(36).substring(2, 8);
@@ -26,14 +26,14 @@ export async function createLink(
     const exists = await redis.exists(slug);
     if (!exists) {
       const p = redis.multi();
-      p.hset(slug, {
-        destinationUrl,
+      p.hset(slug.trim().toLowerCase(), {
+        destinationUrl: destinationUrl.trim(),
         createdAt: new Date().toISOString(),
         visits: 0,
       });
 
-      if (expiration !== -1) {
-        p.expire(slug, expiration);
+      if (ttl !== -1) {
+        p.expire(slug, ttl);
       }
 
       await p.exec();
@@ -43,7 +43,7 @@ export async function createLink(
         destinationUrl,
         url: `${process.env.NEXT_PUBLIC_BASE_URL}/${slug}`,
         createdAt: Date().toString(),
-        ttl: expiration,
+        ttl: ttl,
       };
 
       revalidatePath("/links");
