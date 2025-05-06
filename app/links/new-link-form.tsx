@@ -3,6 +3,13 @@
 import { createLink } from "@/app/actions/create-link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { copyToClipboard } from "@/lib/utils";
 import { PlusCircle } from "lucide-react";
 import { useState } from "react";
@@ -11,6 +18,7 @@ import { toast } from "sonner";
 export function NewLinkForm() {
   const [newUrl, setNewUrl] = useState("");
   const [newSlug, setNewSlug] = useState("");
+  const [newTTL, setNewTTL] = useState(String(60 * 60 * 24)); // default to 24 hours
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleAddUrl = async (e: React.FormEvent) => {
@@ -20,7 +28,7 @@ export function NewLinkForm() {
       setIsSubmitting(true);
 
       try {
-        toast.promise(createLink(newUrl, newSlug), {
+        toast.promise(createLink(newUrl, newSlug, parseInt(newTTL)), {
           loading: "Creating link...",
           success: async (data) => {
             setNewUrl("");
@@ -67,6 +75,20 @@ export function NewLinkForm() {
             className="md:w-1/3"
             disabled={isSubmitting}
           />
+          <Select onValueChange={(e) => setNewTTL(e)} defaultValue={newTTL}>
+            <SelectTrigger className="w-48">
+              <SelectValue placeholder="Select an expiration" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="-1">Never</SelectItem>
+              <SelectItem value={String(60 * 60)}>1 hour</SelectItem>
+              <SelectItem value={String(60 * 60 * 24)}>1 day</SelectItem>
+              <SelectItem value={String(60 * 60 * 24 * 7)}>1 week</SelectItem>
+              <SelectItem value={String(60 * 60 * 24 * 7 * 31)}>
+                1 month
+              </SelectItem>
+            </SelectContent>
+          </Select>
         </div>
         <Button
           type="submit"
