@@ -22,10 +22,9 @@ export async function LinksSection() {
     const results = await p.exec();
 
     // results is an array of hash objects corresponding to each key
-    const shortlinks: ShortlinkData[] = [];
+    let shortlinks: ShortlinkData[] = [];
     for (let i = 0; i < keys.length; i++) {
       const hash = results[i * 2] as Record<string, string>;
-      console.log("🚀 ~ LinksSection ~ hash:", hash);
       const ttl = results[i * 2 + 1] as number;
       shortlinks.push({
         key: keys[i],
@@ -35,12 +34,13 @@ export async function LinksSection() {
       });
     }
 
-    return (
-      <>
-        <pre>{JSON.stringify({ shortlinks }, null, 2)}</pre>
-        <LinksTable links={shortlinks} />
-      </>
-    );
+    shortlinks = shortlinks.sort((a, b) => {
+      const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+      const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+      return dateB - dateA; // newest first
+    });
+
+    return <LinksTable links={shortlinks} />;
   } catch (error) {
     console.error(error);
     return <p>An error occurred</p>;

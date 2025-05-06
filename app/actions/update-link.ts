@@ -1,34 +1,34 @@
-'use server'
+"use server";
 
-import { createFaunaClient } from "@/lib/fauna"
-import faunadb from "faunadb"
-import { revalidatePath } from "next/cache"
+import { Redis } from "@upstash/redis";
+import { revalidatePath } from "next/cache";
 
-export async function updateLink(id: string, slug: string, originalUrl: string) {
-  if (!process.env.FAUNA_GUEST_SECRET) {
-    return { success: false, error: 'Missing database credentials' }
-  }
+const redis = Redis.fromEnv();
 
-  const q = faunadb.query
-  const client = createFaunaClient()
-
+export async function updateShortlink(
+  oldKey: string,
+  args?: { newKey?: string; newDestinationUrl?: string }
+) {
   try {
-    await client.query(
-      q.Update(
-        q.Ref(q.Collection('Mini'), id),
-        {
-          data: {
-            mini: slug,
-            destination: originalUrl,
-          }
-        }
-      )
-    )
+    if (args?.newKey && oldKey !== args?.newKey) {
+      const renamed = await redis.renamenx(oldKey, args?.newKey);
+      if (!renamed) {
+        throw new Error(
+          `Rename failed: either "${oldKey}" does not exist or "${args?.newKey}" already exists`
+        );
+      }
+    }
 
-    revalidatePath('/links')
-    return { success: true }
+    if (args?.newDestinationUrl) {
+      await redis.hset(args?.newKey ?? oldKey, {
+        destinationUrl: args?.newDestinationUrl,
+      } as Record<string, string>);
+    }
+
+    revalidatePath("/links");
+    return { success: true };
   } catch (error) {
-    console.error('Failed to update URL:', error)
-    return { success: false, error: 'Failed to update URL' }
+    console.error("Failed to update URL:", error);
+    return { success: false, error: "Failed to update URL" };
   }
 }

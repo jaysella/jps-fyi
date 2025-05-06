@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { LinksTableRefresh } from "./links-table-refresh";
 import { LinksSection } from "./links.server";
 import { NewLinkForm } from "./new-link-form";
 
@@ -15,9 +16,9 @@ export default async function LinksPage() {
             <h1 className="text-2xl font-bold tracking-tight">Links</h1>
             <p className="text-muted-foreground">Manage shortened URLs</p>
           </div>
-          {/* <div className="flex justify-end">
+          <div className="flex justify-end">
             <LinksTableRefresh />
-          </div> */}
+          </div>
         </div>
         <div className="space-y-4">
           <NewLinkForm />
