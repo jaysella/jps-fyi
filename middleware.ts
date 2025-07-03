@@ -1,7 +1,7 @@
-import { withMiddlewareAuthRequired } from "@auth0/nextjs-auth0/edge";
 import { Redis } from "@upstash/redis";
 import type { NextFetchEvent, NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { auth0 } from "./lib/auth0";
 
 const redis = Redis.fromEnv();
 
@@ -11,7 +11,6 @@ async function handleShortlink(request: NextRequest) {
 
     // get destination URL data, if the slug is a valid shortlink
     const result: string | null = await redis.hget(slug, "destinationUrl");
-    console.log("🚀 ~ handleShortlink ~ result:", result);
 
     if (!result) throw new Error("Key not found or destinationUrl not set");
 
@@ -27,29 +26,39 @@ async function handleShortlink(request: NextRequest) {
   }
 }
 
-// Protected routes middleware
-export const protectedMiddleware = withMiddlewareAuthRequired(
-  async function middleware(req: NextRequest, event: NextFetchEvent) {
-    return NextResponse.next();
-  }
-);
-
 // Main middleware function
 export async function middleware(request: NextRequest, event: NextFetchEvent) {
+  let authRes = await auth0.middleware(request);
+
+  // Ensure own middleware does not handle the `/auth` routes, auto-mounted and handled by the Auth0 SDK
+  if (request.nextUrl.pathname.startsWith("/auth")) {
+    return authRes;
+  }
+
+  // Allow access to public routes without requiring a session
+  if (request.nextUrl.pathname === "/") {
+    return authRes;
+  }
+
+  const { origin } = new URL(request.url);
   const { pathname } = request.nextUrl;
 
-  // Handle protected routes first
+  // Handle protected routes
   if (pathname.startsWith("/links")) {
-    return protectedMiddleware(request, event);
+    const session = await auth0.getSession(request);
+
+    // If the user does not have a session, redirect to login
+    if (!session) {
+      return NextResponse.redirect(`${origin}/auth/login`);
+    }
+
+    // If a valid session exists, continue with the response from Auth0 middleware
+    return authRes;
   }
 
   // Skip shortlink handling for system paths
-  if (
-    pathname.startsWith("/api/") ||
-    pathname.startsWith("/_next/") ||
-    pathname.startsWith("/static/")
-  ) {
-    return NextResponse.next();
+  if (pathname.startsWith("/api/")) {
+    return authRes;
   }
 
   // Handle shortlink redirects for all other paths
