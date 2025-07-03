@@ -57,13 +57,13 @@ export function NewLinkForm() {
         onSubmit={handleAddUrl}
         className="flex flex-col md:flex-row w-full gap-2"
       >
-        <div className="flex flex-col md:flex-row gap-2 flex-grow">
+        <div className="flex flex-col md:flex-row gap-2 grow">
           <Input
             type="url"
             placeholder="Enter a long URL to shorten"
             value={newUrl}
             onChange={(e) => setNewUrl(e.target.value)}
-            className="flex-grow"
+            className="grow"
             required
             disabled={isSubmitting}
           />
