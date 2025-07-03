@@ -1,24 +1,28 @@
 import { Redis } from "@upstash/redis";
-import type { NextFetchEvent, NextRequest } from "next/server";
-import { NextResponse } from "next/server";
+import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
 import { auth0 } from "./lib/auth0";
 
 const redis = Redis.fromEnv();
 
-async function handleShortlink(request: NextRequest) {
-  const slug = request.nextUrl.pathname.slice(1);
+async function handleShortlink(request: NextRequest, authRes: NextResponse) {
+  try {
+    const slug = request.nextUrl.pathname.slice(1);
 
-  // get destination URL data, if the slug is a valid shortlink
-  const result: string | null = await redis.hget(slug, "destinationUrl");
+    // get destination URL data, if the slug is a valid shortlink
+    const result: string | null = await redis.hget(slug, "destinationUrl");
 
-  if (!result) throw new Error("Key not found or destinationUrl not set");
+    if (!result) throw new Error("Key not found or destinationUrl not set");
 
-  // increment visit counter
-  await redis.hincrby(slug, "visits", 1);
+    // increment visit counter
+    await redis.hincrby(slug, "visits", 1);
 
-  return NextResponse.redirect(new URL(result), {
-    status: 302,
-  });
+    return NextResponse.redirect(new URL(result), {
+      status: 302,
+    });
+  } catch (error) {
+    console.error("Error fetching shortlink:", error?.message);
+    return authRes;
+  }
 }
 
 // Main middleware function
@@ -57,7 +61,7 @@ export async function middleware(request: NextRequest, event: NextFetchEvent) {
   }
 
   // Handle shortlink redirects for all other paths
-  return handleShortlink(request);
+  return handleShortlink(request, authRes);
 }
 
 // Configure paths that trigger the middleware
